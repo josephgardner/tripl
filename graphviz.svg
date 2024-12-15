@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="474pt" height="152pt" viewBox="0.00 0.00 474.19 152.00">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 148)">
+<title>RDFGraph</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-148 470.19,-148 470.19,4 -4,4"/>
+<!-- book123 -->
+<g id="node1" class="node">
+<title>book123</title>
+<ellipse fill="none" stroke="black" cx="44.84" cy="-72" rx="44.84" ry="18"/>
+<text text-anchor="middle" x="44.84" y="-67.8" font-family="Times,serif" font-size="14.00">book123</text>
+</g>
+<!-- author1 -->
+<g id="node2" class="node">
+<title>author1</title>
+<ellipse fill="none" stroke="black" cx="222.29" cy="-126" rx="40.54" ry="18"/>
+<text text-anchor="middle" x="222.29" y="-121.8" font-family="Times,serif" font-size="14.00">author1</text>
+</g>
+<!-- book123&#45;&gt;author1 -->
+<g id="edge2" class="edge">
+<title>book123-&gt;author1</title>
+<path fill="none" stroke="black" d="M79.44,-83.72C88.57,-86.82 98.48,-90.11 107.67,-93 130.17,-100.09 155.35,-107.46 176.28,-113.43"/>
+<polygon fill="black" stroke="black" points="175.08,-116.73 185.66,-116.09 176.99,-109.99 175.08,-116.73"/>
+<text text-anchor="middle" x="127.1" y="-108.56" font-family="Times,serif" font-size="14.00">creator</text>
+</g>
+<!-- literal1 -->
+<g id="node3" class="node">
+<title>literal1</title>
+<polygon fill="none" stroke="black" points="280.04,-90 164.53,-90 164.53,-54 280.04,-54 280.04,-90"/>
+<text text-anchor="middle" x="222.29" y="-67.8" font-family="Times,serif" font-size="14.00">The Great Gatsby</text>
+</g>
+<!-- book123&#45;&gt;literal1 -->
+<g id="edge1" class="edge">
+<title>book123-&gt;literal1</title>
+<path fill="none" stroke="black" d="M90.11,-72C109.04,-72 131.58,-72 152.59,-72"/>
+<polygon fill="black" stroke="black" points="152.56,-75.5 162.56,-72 152.56,-68.5 152.56,-75.5"/>
+<text text-anchor="middle" x="127.1" y="-76.2" font-family="Times,serif" font-size="14.00">title</text>
+</g>
+<!-- literal3 -->
+<g id="node5" class="node">
+<title>literal3</title>
+<polygon fill="none" stroke="black" points="262.95,-36 181.62,-36 181.62,0 262.95,0 262.95,-36"/>
+<text text-anchor="middle" x="222.29" y="-13.8" font-family="Times,serif" font-size="14.00">1925-04-10</text>
+</g>
+<!-- book123&#45;&gt;literal3 -->
+<g id="edge4" class="edge">
+<title>book123-&gt;literal3</title>
+<path fill="none" stroke="black" d="M79.78,-60.31C88.82,-57.27 98.59,-54.05 107.67,-51.2 128.09,-44.79 150.7,-38.1 170.33,-32.42"/>
+<polygon fill="black" stroke="black" points="171.11,-35.83 179.75,-29.71 169.17,-29.11 171.11,-35.83"/>
+<text text-anchor="middle" x="127.1" y="-55.4" font-family="Times,serif" font-size="14.00">date</text>
+</g>
+<!-- literal2 -->
+<g id="node4" class="node">
+<title>literal2</title>
+<polygon fill="none" stroke="black" points="466.19,-144 346.36,-144 346.36,-108 466.19,-108 466.19,-144"/>
+<text text-anchor="middle" x="406.27" y="-121.8" font-family="Times,serif" font-size="14.00">F. Scott Fitzgerald</text>
+</g>
+<!-- author1&#45;&gt;literal2 -->
+<g id="edge3" class="edge">
+<title>author1-&gt;literal2</title>
+<path fill="none" stroke="black" d="M263.22,-126C284.18,-126 310.48,-126 334.73,-126"/>
+<polygon fill="black" stroke="black" points="334.56,-129.5 344.56,-126 334.56,-122.5 334.56,-129.5"/>
+<text text-anchor="middle" x="313.2" y="-130.2" font-family="Times,serif" font-size="14.00">name</text>
+</g>
+</g>
+</svg>

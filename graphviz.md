@@ -58,6 +58,11 @@ digraph RDFGraph {
 }
 ```
 
+##### Rendered
+
+![graphviz](./graphviz.svg)
+
+
 #### Visualization Breakdown
 1. **Nodes**:
    - `book123` and `author1` are represented as elliptical nodes.

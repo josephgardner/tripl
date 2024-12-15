@@ -4,6 +4,8 @@ status: experimental
 
 # **Tripl** – A Simple Domain-Specific Language (DSL) for Mapping Ontologies Using RDF Triples
 
+This RFC defines **Tripl**, a Domain-Specific Language (DSL) for expressing RDF triples with a simplified syntax for ontology mapping. The language prioritizes human-readable syntax, short URIs, and automatic resolution of predicates via a well-known path for mappings. **Tripl** is designed to work with RDF-based data and provides a mechanism for linking short names to full URIs through a centralized mapping system. This approach improves flexibility by allowing custom property mappings to be stored in external files.
+
 - [Abstract](#abstract)
 - [1. Introduction](#1-introduction)
 - [2. Syntax Overview](#2-syntax-overview)
@@ -23,11 +25,6 @@ status: experimental
 - [7. IANA Considerations](#7-iana-considerations)
 - [8. References](#8-references)
   - [Appendix: Example System Workflow](#appendix-example-system-workflow)
-
-
-## Abstract
-
-This RFC defines **Tripl**, a Domain-Specific Language (DSL) for expressing RDF triples with a simplified syntax for ontology mapping. The language prioritizes human-readable syntax, short URIs, and automatic resolution of predicates via a well-known path for mappings. **Tripl** is designed to work with RDF-based data and provides a mechanism for linking short names to full URIs through a centralized mapping system. This approach improves flexibility by allowing custom property mappings to be stored in external files.
 
 ## 1. Introduction
 

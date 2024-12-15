@@ -4,31 +4,30 @@ status: experimental
 
 # **Tripl** – A Simple Domain-Specific Language (DSL) for Mapping Ontologies Using RDF Triples
 
+- [Abstract](#abstract)
+- [1. Introduction](#1-introduction)
+- [2. Syntax Overview](#2-syntax-overview)
+  - [2.1 Base URI](#21-base-uri)
+  - [2.3 Triples](#23-triples)
+  - [2.4 Literals](#24-literals)
+- [3. Mapping Mechanism](#3-mapping-mechanism)
+  - [3.1 Well-Known Path](#31-well-known-path)
+  - [3.2 tripl.json Configuration File](#32-tripljson-configuration-file)
+  - [3.3 Mapping File Format](#33-mapping-file-format)
+- [4. Example Usage](#4-example-usage)
+  - [Example 1: Basic Document](#example-1-basic-document)
+  - [Example 2: tripl.json Configuration](#example-2-tripljson-configuration)
+  - [Example 3: Mapping File](#example-3-mapping-file)
+- [5. Error Handling and Validation](#5-error-handling-and-validation)
+- [6. Security Considerations](#6-security-considerations)
+- [7. IANA Considerations](#7-iana-considerations)
+- [8. References](#8-references)
+  - [Appendix: Example System Workflow](#appendix-example-system-workflow)
+
+
 ## Abstract
 
 This RFC defines **Tripl**, a Domain-Specific Language (DSL) for expressing RDF triples with a simplified syntax for ontology mapping. The language prioritizes human-readable syntax, short URIs, and automatic resolution of predicates via a well-known path for mappings. **Tripl** is designed to work with RDF-based data and provides a mechanism for linking short names to full URIs through a centralized mapping system. This approach improves flexibility by allowing custom property mappings to be stored in external files.
-
----
-
-## Table of Contents
-
-1. Introduction
-2. Syntax Overview
-   - 2.1 Base URI
-   - 2.2 Mappings and Redirections
-   - 2.3 Triples
-   - 2.4 Literals
-3. Mapping Mechanism
-   - 3.1 Well-Known Path
-   - 3.2 tripl.json Configuration File
-   - 3.3 Mapping File Format
-4. Example Usage
-5. Error Handling and Validation
-6. Security Considerations
-7. IANA Considerations
-8. References
-
----
 
 ## 1. Introduction
 
@@ -50,7 +49,6 @@ Example:
 ```
 This implies that any identifier like `book123` would be resolved as `http://example.com/book123`.
 
-### 2.2 Mappings and Redirections
 
 Mappings are used to link short names (like `title` or `creator`) to full URIs, facilitating the use of human-readable predicates in RDF triples. Mappings are retrieved from a `.well-known` path relative to the base URI. The system SHOULD automatically assume the configuration file is located at:
 ```

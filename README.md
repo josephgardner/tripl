@@ -1,3 +1,7 @@
+---
+status: experimental
+---
+
 # **Tripl** – A Simple Domain-Specific Language (DSL) for Mapping Ontologies Using RDF Triples
 
 ## Abstract

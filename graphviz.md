@@ -1,22 +1,24 @@
+# Appendix B: Visualize a Tripl document with Graphviz
+
 To visualize a **Tripl** document with **Graphviz**, you can represent the RDF triples as a directed graph. Each triple `[subject, predicate, object]` becomes an edge in the graph, where:
 
 - **Subject** is a node.
 - **Predicate** is the label of the directed edge.
 - **Object** is either another node (if it is a URI) or a value displayed as a literal.
 
-### Technical Overview of Representation
+## Technical Overview of Representation
 
-#### Nodes
+### Nodes
 1. **URIs**: Represented as graph nodes with a unique identifier. For example, `book123` resolves to `http://example.com/book123` and is displayed as a node labeled `book123`.
 2. **Literals**: Represented as leaf nodes (rectangles or ellipses, depending on styling) with their value as the label.
 
-#### Edges
+### Edges
 1. **Predicates**: Represented as directed edges between the **subject** and **object** nodes. The edge label corresponds to the resolved predicate (e.g., `dc:title`).
 2. **Types of Relationships**:
    - **SameAs relationships** (e.g., `owl:sameAs`) are visually represented as bidirectional edges or dashed edges to indicate equivalence.
    - Other predicates are standard directed edges.
 
-#### Graphviz Syntax
+### Graphviz Syntax
 1. **Graph Declaration**: Use `digraph` for a directed graph.
 2. **Node Declaration**:
    - Use unique identifiers for each node.
@@ -26,9 +28,9 @@ To visualize a **Tripl** document with **Graphviz**, you can represent the RDF t
 
 ---
 
-### Example Graphviz Representation
+## Example Graphviz Representation
 
-#### Input Tripl Document
+### Input Tripl Document
 ```plaintext
 @base http://example.com/
 
@@ -38,7 +40,7 @@ To visualize a **Tripl** document with **Graphviz**, you can represent the RDF t
 [book123, date, "1925-04-10"]
 ```
 
-#### Graphviz Output
+### Graphviz Output
 ```dot
 digraph RDFGraph {
     rankdir=LR; // Left-to-right layout for readability
@@ -58,12 +60,12 @@ digraph RDFGraph {
 }
 ```
 
-##### Rendered
+#### Rendered
 
 ![graphviz](./graphviz.svg)
 
 
-#### Visualization Breakdown
+### Visualization Breakdown
 1. **Nodes**:
    - `book123` and `author1` are represented as elliptical nodes.
    - Literals (`"The Great Gatsby"`, `"F. Scott Fitzgerald"`, and `"1925-04-10"`) are represented as rectangular nodes.
@@ -80,21 +82,21 @@ digraph RDFGraph {
 
 ---
 
-### Advanced Representations
+## Advanced Representations
 
-#### Equivalence (e.g., `owl:sameAs`)
+### Equivalence (e.g., `owl:sameAs`)
 For triples like `[book123, sameAs, book456]`:
 ```dot
 book123 -> book456 [label="sameAs", dir="both", style="dashed"];
 ```
 
-#### Data Type Properties
+### Data Type Properties
 For properties with specific data types (e.g., `xsd:date` for `"1925-04-10"`):
 ```dot
 literal3 [label="1925-04-10 (xsd:date)", shape=box];
 ```
 
-#### Clustering
+### Clustering
 To group related entities, use **Graphviz subgraphs**:
 ```dot
 subgraph cluster_books {
@@ -109,7 +111,7 @@ subgraph cluster_books {
 
 ---
 
-### Automation with Graphviz Tools
+## Automation with Graphviz Tools
 - **Preprocessing**: Write a script (in Python or another language) to parse the **Tripl** document, resolve mappings, and output Graphviz-compatible `.dot` files.
 - **Visualization**: Use Graphviz tools like `dot` or `neato` to generate visualizations:
   - `dot -Tpng graph.dot -o graph.png` (for PNG output)

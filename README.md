@@ -25,7 +25,8 @@ This RFC defines **Tripl**, a Domain-Specific Language (DSL) for expressing RDF 
 - [6. Security Considerations](#6-security-considerations)
 - [7. IANA Considerations](#7-iana-considerations)
 - [8. References](#8-references)
-  - [Appendix: Example System Workflow](#appendix-example-system-workflow)
+  - [Appendix A: Example System Workflow](#appendix-a-example-system-workflow)
+  - [Appendix B: Visualize a Tripl document with Graphviz](#appendix-b-visualize-a-tripl-document-with-graphviz)
 
 ## 1. Introduction
 
@@ -206,8 +207,10 @@ This RFC does not require any IANA (Internet Assigned Numbers Authority) actions
 
 ---
 
-### Appendix: Example System Workflow
+### Appendix A: Example System Workflow
 
 1. The document is processed starting with the `@base` URI.
 2. The system checks for the existence of the `.well-known/tripl.json` configuration file.
 3. The system loads the `propertyMapping` URI from the `tripl.json
+
+### Appendix B: [Visualize a Tripl document with Graphviz](./graphviz.md)

@@ -59,7 +59,7 @@ Mappings MUST be defined inside the `tripl.json` configuration file, which conta
 Example `tripl.json`:
 ```json
 {
-  "propertyMapping": "http://example.com/.well-known/mapping.json"
+  "propertyMapping": "http://example.com/mapping.json"
 }
 ```
 

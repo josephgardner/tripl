@@ -157,7 +157,7 @@ The mapping file is OPTIONAL, but if it exists, the system MUST automatically ap
 
 ```json
 {
-  "propertyMapping": "http://example.com/.well-known/mapping.json"
+  "propertyMapping": "http://example.com/mapping.json"
 }
 ```
 

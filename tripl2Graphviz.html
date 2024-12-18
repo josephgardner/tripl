@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tripl Editor</title>
   <!-- Load full Viz.js library --> 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/viz.js/2.1.2/viz.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/viz.js/2.1.2/viz.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/viz.js/2.1.2/full.render.js"></script>
   <style>
     body {
@@ -128,6 +128,8 @@
       try {
         const triples = parseTripl(input);
         const graphvizCode = toGraphviz(triples);
+        
+        // Use the Viz constructor directly
         const viz = new Viz();
         viz.renderSVGElement(graphvizCode)
           .then(svg => {

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tripl Editor</title>
+  <!-- Load full Viz.js library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/viz.js/2.1.2/full.render.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+    #editor {
+      width: 50%;
+      height: 100%;
+      padding: 1em;
+      border-right: 1px solid #ccc;
+      box-sizing: border-box;
+      resize: horizontal;
+      overflow: auto;
+    }
+    #output {
+      width: 50%;
+      height: 100%;
+      padding: 1em;
+      box-sizing: border-box;
+      overflow: auto;
+    }
+    textarea {
+      width: 100%;
+      height: calc(100% - 50px);
+      box-sizing: border-box;
+      font-family: monospace;
+    }
+    button {
+      margin-top: 10px;
+      padding: 8px 12px;
+      background-color: #007BFF;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div id="editor">
+    <h3>Tripl Editor</h3>
+    <textarea id="triplInput">
+# Example Tripl Document
+[book123, title, "The Great Gatsby"]
+[book123, creator, author1]
+[author1, name, "F. Scott Fitzgerald"]
+[book123, date, "1925-04-10"]
+    </textarea>
+    <button onclick="renderGraph()">Render Graph</button>
+  </div>
+  <div id="output">
+    <h3>Graphviz Preview</h3>
+    <div id="graph"></div>
+  </div>
+
+  <script>
+    function parseTripl(input) {
+      const lines = input.split("\n").map(line => line.trim());
+      const triples = [];
+
+      lines.forEach(line => {
+        if (line.startsWith("#") || line === "") return;
+        if (line.startsWith("[") && line.endsWith("]")) {
+          const triple = parseTriple(line);
+          triples.push(triple);
+        }
+      });
+
+      return triples;
+    }
+
+    function parseTriple(line) {
+      const parts = line.slice(1, -1).split(",").map(part => part.trim());
+      if (parts.length !== 3) throw new Error(`Invalid triple: ${line}`);
+
+      const subject = parts[0];
+      const predicate = parts[1];
+      const object = resolveObject(parts[2]);
+
+      return { subject, predicate, object };
+    }
+
+    function resolveObject(obj) {
+      if (obj.startsWith('"') && obj.endsWith('"')) {
+        return obj.slice(1, -1);
+      }
+      return obj;
+    }
+
+    function toGraphviz(triples) {
+      let graph = ["digraph RDFGraph {", "  rankdir=LR;"];
+      const nodes = new Set();
+
+      triples.forEach(({ subject, predicate, object }) => {
+        nodes.add(subject);
+        if (!object.startsWith('"')) {
+          nodes.add(object);
+          graph.push(`  "${subject}" -> "${object}" [label="${predicate}"];`);
+        } else {
+          graph.push(`  "${subject}" -> "${object}" [label="${predicate}"];`);
+        }
+      });
+
+      nodes.forEach(node => {
+        graph.push(`  "${node}" [shape=ellipse];`);
+      });
+
+      graph.push("}");
+      return graph.join("\n");
+    }
+
+    function renderGraph() {
+      const input = document.getElementById("triplInput").value;
+      try {
+        const triples = parseTripl(input);
+        const graphvizCode = toGraphviz(triples);
+        const viz = new Viz();
+        viz.renderSVGElement(graphvizCode)
+          .then(svg => {
+            const graphDiv = document.getElementById("graph");
+            graphDiv.innerHTML = "";
+            graphDiv.appendChild(svg);
+          })
+          .catch(error => {
+            console.error("Error rendering Graphviz:", error);
+            document.getElementById("graph").innerHTML = "<p>Error rendering graph</p>";
+          });
+      } catch (error) {
+        console.error("Parsing error:", error);
+        document.getElementById("graph").innerHTML = `<p>Parsing error: ${error.message}</p>`;
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tripl Editor</title>
-  <!-- Load full Viz.js library --> 
+  <!-- Load full Viz.js library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/viz.js/2.1.2/viz.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/viz.js/2.1.2/full.render.js"></script>
   <style>
@@ -15,8 +16,9 @@
       height: 100vh;
       overflow: hidden;
     }
+
     #editor {
-      width: 50%;
+      width: 35%;
       height: 100%;
       padding: 1em;
       border-right: 1px solid #ccc;
@@ -24,19 +26,22 @@
       resize: horizontal;
       overflow: auto;
     }
+
     #output {
-      width: 50%;
+      width: 100%;
       height: 100%;
       padding: 1em;
       box-sizing: border-box;
       overflow: auto;
     }
+
     textarea {
       width: 100%;
-      height: calc(100% - 50px);
+      height: calc(100% - 120px);
       box-sizing: border-box;
       font-family: monospace;
     }
+
     button {
       margin-top: 10px;
       padding: 8px 12px;
@@ -45,11 +50,13 @@
       border: none;
       cursor: pointer;
     }
+
     button:hover {
       background-color: #0056b3;
     }
   </style>
 </head>
+
 <body>
   <div id="editor">
     <h3>Tripl Editor</h3>
@@ -89,52 +96,65 @@
 
       const subject = parts[0];
       const predicate = parts[1];
-      const object = resolveObject(parts[2]);
+      const object = parts[2];
 
       return { subject, predicate, object };
     }
 
-    function resolveObject(obj) {
-      if (obj.startsWith('"') && obj.endsWith('"')) {
-        return obj.slice(1, -1);
-      }
-      return obj;
-    }
-
     function toGraphviz(triples) {
       let graph = ["digraph RDFGraph {", "  rankdir=LR;"];
-      const nodes = new Set();
+      const literals = new Set(); // Track literal nodes separately
+      const nodes = new Set(); // Track non-literal nodes
 
       triples.forEach(({ subject, predicate, object }) => {
-        nodes.add(subject);
+        nodes.add(subject); // Subjects are always non-literal
         if (!object.startsWith('"')) {
-          nodes.add(object);
+          nodes.add(object); // Non-literal objects are added to nodes
           graph.push(`  "${subject}" -> "${object}" [label="${predicate}"];`);
         } else {
-          graph.push(`  "${subject}" -> "${object}" [label="${predicate}"];`);
+          unquoted = object.slice(1, -1);
+          literals.add(unquoted); // Literal objects are added to literals
+          graph.push(`  "${subject}" -> "${unquoted}" [label="${predicate}"];`);
         }
       });
 
+      // Define shapes for non-literal nodes
       nodes.forEach(node => {
         graph.push(`  "${node}" [shape=ellipse];`);
+      });
+
+      // Define shapes for literal nodes
+      literals.forEach(literal => {
+        graph.push(`  "${literal}" [shape=box];`);
       });
 
       graph.push("}");
       return graph.join("\n");
     }
 
+
     function renderGraph() {
       const input = document.getElementById("triplInput").value;
       try {
         const triples = parseTripl(input);
         const graphvizCode = toGraphviz(triples);
-        
+
         // Use the Viz constructor directly
         const viz = new Viz();
+
+        console.log(graphvizCode)
         viz.renderSVGElement(graphvizCode)
           .then(svg => {
             const graphDiv = document.getElementById("graph");
             graphDiv.innerHTML = "";
+            graphDiv.appendChild(svg);
+
+            // Use SVG's bounding box to adjust viewBox
+            const { x, y, width, height } = svg.getBBox();
+            svg.setAttribute("viewBox", `${x} ${y} ${width} ${height}`);
+            svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
+            svg.style.width = "100%";
+            svg.style.height = "100%";
             graphDiv.appendChild(svg);
           })
           .catch(error => {
@@ -148,4 +168,5 @@
     }
   </script>
 </body>
+
 </html>

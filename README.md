@@ -30,7 +30,7 @@ This RFC defines **Tripl**, a Domain-Specific Language (DSL) for expressing RDF 
 
 ## 1. Introduction
 
-This document specifies Tripl, a DSL for expressing RDF triples with an emphasis on simplicity and readability. It aims to make defining resources and their relationships easier, without the need to focus on full URI paths in the triples. The language allows short names for predicates to be mapped to their full URIs, keeping it concise and accessible while ensuring flexibility and extensibility. This approach makes working with RDF data more intuitive and user-friendly.
+This document specifies **Tripl**, a DSL for expressing RDF triples with an emphasis on simplicity and readability. It aims to make defining resources and their relationships easier, without the need to focus on full URI paths in the triples. The language allows short names for predicates to be mapped to their full URIs, keeping it concise and accessible while ensuring flexibility and extensibility. This approach makes working with RDF data more intuitive and user-friendly.
 
 **Tripl** is ideal for use cases such as knowledge representation and linked data where a human-readable abstraction of RDF data is desirable. 
 

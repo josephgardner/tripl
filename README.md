@@ -48,18 +48,10 @@ Example:
 ```
 This implies that any identifier like `book123` would be resolved as `http://example.com/book123`.
 
-Mappings are used to link short names (like `title` or `creator`) to full URIs, facilitating the use of human-readable predicates in RDF triples. Mappings are retrieved from a `.well-known` path relative to the base URI. The system SHOULD automatically assume the configuration file is located at:
+Mappings link short names (e.g., `title`, `creator`) to full URIs, allowing human-readable predicates in RDF triples. They are retrieved from a `.well-known` path relative to the base URI:
+
 ```
 <base URI>/.well-known/tripl.json
-```
-
-Mappings MUST be defined inside the `tripl.json` configuration file, which contains a `propertyMapping` directive that references an external mapping file. The `propertyMapping` value is a URI pointing to the location of the predicate mappings.
-
-Example `tripl.json`:
-```json
-{
-  "propertyMapping": "http://example.com/mapping.json"
-}
 ```
 
 ### 2.3 Triples

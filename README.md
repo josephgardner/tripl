@@ -1,6 +1,7 @@
 ---
 status: experimental
 author: joseph gardner
+version: draft-1
 ---
 
 # **Tripl** – A Simple Domain-Specific Language (DSL) for Mapping Ontologies Using RDF Triples

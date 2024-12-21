@@ -1,14 +1,13 @@
 ---
 status: experimental
 author: joseph gardner
-version: draft-1
+version: draft-2
 ---
 
 # **Tripl** – A Simple Domain-Specific Language (DSL) for Mapping Ontologies Using RDF Triples
 
 This RFC defines **Tripl**, a Domain-Specific Language (DSL) for expressing RDF triples with a simplified syntax for ontology mapping. The language prioritizes human-readable syntax, short URIs, and automatic resolution of predicates via a well-known path for mappings. **Tripl** is designed to work with RDF-based data and provides a mechanism for linking short names to full URIs through a centralized mapping system. This approach improves flexibility by allowing custom property mappings to be stored in external files.
 
-- [Abstract](#abstract)
 - [1. Introduction](#1-introduction)
 - [2. Syntax Overview](#2-syntax-overview)
   - [2.1 Base URI](#21-base-uri)
@@ -31,9 +30,9 @@ This RFC defines **Tripl**, a Domain-Specific Language (DSL) for expressing RDF 
 
 ## 1. Introduction
 
-This document specifies **Tripl**, a DSL for expressing RDF triples with an emphasis on simplicity and readability. The DSL is designed to make it easier to define resources and their relationships without the verbosity of full URI paths in the triples. It includes a method to map short names for predicates to full URIs using a customizable configuration file located at a `.well-known` path, making the system both flexible and extensible.
+This document specifies Tripl, a DSL for expressing RDF triples with an emphasis on simplicity and readability. It aims to make defining resources and their relationships easier, without the need to focus on full URI paths in the triples. The language allows short names for predicates to be mapped to their full URIs, keeping it concise and accessible while ensuring flexibility and extensibility. This approach makes working with RDF data more intuitive and user-friendly.
 
-**Tripl** is ideal for use cases such as knowledge representation, linked data, and semantic web applications where a human-readable abstraction of RDF data is needed.
+**Tripl** is ideal for use cases such as knowledge representation and linked data where a human-readable abstraction of RDF data is desirable. 
 
 ---
 
@@ -48,7 +47,6 @@ Example:
 @base http://example.com/
 ```
 This implies that any identifier like `book123` would be resolved as `http://example.com/book123`.
-
 
 Mappings are used to link short names (like `title` or `creator`) to full URIs, facilitating the use of human-readable predicates in RDF triples. Mappings are retrieved from a `.well-known` path relative to the base URI. The system SHOULD automatically assume the configuration file is located at:
 ```
@@ -68,14 +66,14 @@ Example `tripl.json`:
 
 Triples in **Tripl** are expressed in the form:
 ```plaintext
-[subject, predicate, object]
+subject predicate object
 ```
 - **Subject** and **object** MUST be either URIs or literals (enclosed in quotes).
 - **Predicate** SHOULD be a short name that will be resolved based on the mappings defined in the `propertyMapping` file.
 
 Example Triple:
 ```plaintext
-[book123, title, "The Great Gatsby"]
+book123 title "The Great Gatsby"
 ```
 Here, `book123` will resolve to `http://example.com/book123`, and `title` will be resolved using the mappings in the `mapping.json` file.
 
@@ -85,7 +83,7 @@ Literals are enclosed in double quotes and represent data values. These are dist
 
 Example:
 ```plaintext
-[book123, date, "1925-04-10"]
+book123 date "1925-04-10"
 ```
 Here, `"1925-04-10"` is a literal value.
 
@@ -140,18 +138,18 @@ The mapping file is OPTIONAL, but if it exists, the system MUST automatically ap
 
 # The system will automatically load mappings from .well-known/tripl.json
 
-[book123, title, "The Great Gatsby"]
-[book123, creator, author1]
-[book123, date, "1925-04-10"]
-[book123, identifier, "9780743273565"]
+book123 title "The Great Gatsby"
+book123 creator author1
+book123 date "1925-04-10"
+book123 identifier "9780743273565"
 
-[book124, title, "To Kill a Mockingbird"]
-[book124, creator, author2]
-[book124, date, "1960-07-11"]
-[book124, identifier, "9780061120084"]
+book124 title "To Kill a Mockingbird"
+book124 creator author2
+book124 date "1960-07-11"
+book124 identifier "9780061120084"
 
-[author1, name, "F. Scott Fitzgerald"]
-[author2, name, "Harper Lee"]
+author1 name "F. Scott Fitzgerald"
+author2 name "Harper Lee"
 ```
 
 ### Example 2: tripl.json Configuration
@@ -212,6 +210,7 @@ This RFC does not require any IANA (Internet Assigned Numbers Authority) actions
 
 1. The document is processed starting with the `@base` URI.
 2. The system checks for the existence of the `.well-known/tripl.json` configuration file.
-3. The system loads the `propertyMapping` URI from the `tripl.json
+3. The system loads the `propertyMapping` URI from the `tripl.json` file and retrieves the predicate mappings.
 
 ### Appendix B: [Visualize a Tripl document with Graphviz](./graphviz.md)
+

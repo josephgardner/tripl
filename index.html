@@ -8,6 +8,8 @@
   <!-- Load full Viz.js library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/viz.js/2.1.2/viz.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/viz.js/2.1.2/full.render.js"></script>
+  <!-- Load Font Awesome for GitHub icon -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -85,10 +87,47 @@
         /* Keep the same height on wider screens */
       }
     }
+
+    /* GitHub button positioning */
+    .github-button {
+      position: fixed;
+      top: 12px;
+      right: 12px;
+      background-color: #333;
+      border-radius: 50%;
+      color: white;
+      font-size: 24px;
+      text-decoration: none;
+      width: 22px;
+      /* Set a smaller fixed width */
+      height: 22px;
+      /* Set a smaller fixed height */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0;
+      /* Remove padding to reduce the extra space */
+    }
+
+    .github-button:hover {
+      background-color: #6e5494;
+      /* Optional hover effect color */
+    }
+
+    .github-button i {
+      margin: 0;
+      font-size: 20px;
+      /* Adjust the size of the icon */
+    }
   </style>
 </head>
 
 <body>
+  <!-- GitHub Button -->
+  <a href="https://github.com/josephgardner/tripl" target="_blank" class="github-button">
+    <i class="fab fa-github"></i>
+  </a>
+
   <div id="editor">
     <h3>Tripl Editor</h3>
     <textarea id="triplInput">

@@ -62,10 +62,10 @@
     <h3>Tripl Editor</h3>
     <textarea id="triplInput">
 # Example Tripl Document
-[book123, title, "The Great Gatsby"]
-[book123, creator, author1]
-[author1, name, "F. Scott Fitzgerald"]
-[book123, date, "1925-04-10"]
+book123 title "The Great Gatsby"
+book123 creator author1
+author1 name "F. Scott Fitzgerald"
+book123 date "1925-04-10"
     </textarea>
     <button onclick="renderGraph()">Render Graph</button>
   </div>
@@ -79,26 +79,24 @@
       const lines = input.split("\n").map(line => line.trim());
       const triples = [];
 
+      const triplePattern = /^(\S+)\s+(\S+)\s+("[^"]*"|\S+)$/;
+
       lines.forEach(line => {
         if (line.startsWith("#") || line === "") return;
-        if (line.startsWith("[") && line.endsWith("]")) {
-          const triple = parseTriple(line);
-          triples.push(triple);
+
+        const match = line.match(triplePattern);
+        if (!match) {
+          throw new Error(`Invalid triple: ${line}`);
         }
+
+        const subject = match[1];
+        const predicate = match[2];
+        let object = match[3];
+
+        triples.push({ subject, predicate, object });
       });
 
       return triples;
-    }
-
-    function parseTriple(line) {
-      const parts = line.slice(1, -1).split(",").map(part => part.trim());
-      if (parts.length !== 3) throw new Error(`Invalid triple: ${line}`);
-
-      const subject = parts[0];
-      const predicate = parts[1];
-      const object = parts[2];
-
-      return { subject, predicate, object };
     }
 
     function toGraphviz(triples) {
@@ -131,7 +129,6 @@
       graph.push("}");
       return graph.join("\n");
     }
-
 
     function renderGraph() {
       const input = document.getElementById("triplInput").value;

@@ -5,45 +5,39 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tripl Editor</title>
-  <!-- Load full Viz.js library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/viz.js/2.1.2/viz.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/viz.js/2.1.2/full.render.js"></script>
-  <!-- Load Font Awesome for GitHub icon -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
   <style>
     body {
       font-family: Arial, sans-serif;
       margin: 0;
       display: flex;
-      flex-direction: column;
-      /* Stacked layout by default */
       height: 100vh;
-      overflow: auto;
-      /* Allow entire page to scroll */
-    }
-
-    #editor,
-    #output {
-      width: 100%;
-      padding: 1em;
-      box-sizing: border-box;
-      overflow: auto;
-      /* Removed this from #output to let the body handle scrolling */
+      overflow: hidden;
     }
 
     #editor {
-      border-bottom: 1px solid #ccc;
-      min-height: 400px;
-      /* Set a min height to prevent the editor from becoming too small */
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
+      width: 35%;
+      height: 100%;
+      padding: 1em;
+      border-right: 1px solid #ccc;
+      box-sizing: border-box;
+      resize: horizontal;
+      overflow: auto;
+    }
+
+    #output {
+      width: 100%;
+      height: 100%;
+      padding: 1em;
+      box-sizing: border-box;
+      overflow: auto;
     }
 
     textarea {
       width: 100%;
-      height: calc(100% - 60px);
-      /* Space for the button */
+      height: calc(100% - 150px);
       box-sizing: border-box;
       font-family: monospace;
     }
@@ -55,79 +49,15 @@
       color: #fff;
       border: none;
       cursor: pointer;
-      width: 100%;
-      /* Make button span full width */
     }
 
     button:hover {
       background-color: #0056b3;
     }
-
-    /* Responsive layout adjustments for wide screens */
-    @media screen and (min-width: 768px) {
-      body {
-        flex-direction: row;
-        /* Arrange items side by side on wider screens */
-      }
-
-      #editor {
-        width: 35%;
-        border-right: 1px solid #ccc;
-        resize: horizontal;
-        min-height: 300px;
-        /* Increase the min-height for wider screens */
-      }
-
-      #output {
-        width: 65%;
-      }
-
-      textarea {
-        height: calc(100% - 60px);
-        /* Keep the same height on wider screens */
-      }
-    }
-
-    /* GitHub button positioning */
-    .github-button {
-      position: fixed;
-      top: 12px;
-      right: 12px;
-      background-color: #333;
-      border-radius: 50%;
-      color: white;
-      font-size: 24px;
-      text-decoration: none;
-      width: 22px;
-      /* Set a smaller fixed width */
-      height: 22px;
-      /* Set a smaller fixed height */
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 0;
-      /* Remove padding to reduce the extra space */
-    }
-
-    .github-button:hover {
-      background-color: #6e5494;
-      /* Optional hover effect color */
-    }
-
-    .github-button i {
-      margin: 0;
-      font-size: 20px;
-      /* Adjust the size of the icon */
-    }
   </style>
 </head>
 
 <body>
-  <!-- GitHub Button -->
-  <a href="https://github.com/josephgardner/tripl" target="_blank" class="github-button">
-    <i class="fab fa-github"></i>
-  </a>
-
   <div id="editor">
     <h3>Tripl Editor</h3>
     <textarea id="triplInput">
@@ -137,6 +67,11 @@ book123 creator author1
 author1 name "F. Scott Fitzgerald"
 book123 date "1925-04-10"
     </textarea>
+    <label for="viewType">Graph View:</label>
+    <select id="viewType">
+      <option value="table">Table View</option>
+      <option value="node">Node-Link View</option>
+    </select>
     <button onclick="renderGraph()">Render Graph</button>
   </div>
   <div id="output">
@@ -149,51 +84,90 @@ book123 date "1925-04-10"
       const lines = input.split("\n").map(line => line.trim());
       const triples = [];
 
-      const triplePattern = /^(\S+)\s+(\S+)\s+("[^"]*"|\S+)$/;
-
       lines.forEach(line => {
         if (line.startsWith("#") || line === "") return;
 
-        const match = line.match(triplePattern);
-        if (!match) {
-          throw new Error(`Invalid triple: ${line}`);
-        }
+        const match = line.match(/^(\S+)\s+(\S+)\s+(.+)$/);
+        if (!match) throw new Error(`Invalid triple: ${line}`);
 
-        const subject = match[1];
-        const predicate = match[2];
-        let object = match[3];
-
+        const [, subject, predicate, object] = match;
         triples.push({ subject, predicate, object });
       });
 
       return triples;
     }
 
-    function toGraphviz(triples) {
-      let graph = ["digraph RDFGraph {", "  rankdir=LR;"];
-      const literals = new Set(); // Track literal nodes separately
-      const nodes = new Set(); // Track non-literal nodes
+    function groupBySubject(triples) {
+      const grouped = {};
 
       triples.forEach(({ subject, predicate, object }) => {
-        nodes.add(subject); // Subjects are always non-literal
-        if (!object.startsWith('"')) {
-          nodes.add(object); // Non-literal objects are added to nodes
-          graph.push(`  "${subject}" -> "${object}" [label="${predicate}"];`);
+        if (!grouped[subject]) {
+          grouped[subject] = { literals: [], links: [] };
+        }
+
+        if (object.startsWith('"')) {
+          grouped[subject].literals.push({ predicate, object: object.slice(1, -1) });
         } else {
-          unquoted = object.slice(1, -1);
-          literals.add(unquoted); // Literal objects are added to literals
-          graph.push(`  "${subject}" -> "${unquoted}" [label="${predicate}"];`);
+          grouped[subject].links.push({ predicate, object });
         }
       });
 
-      // Define shapes for non-literal nodes
-      nodes.forEach(node => {
-        graph.push(`  "${node}" [shape=ellipse];`);
-      });
+      return grouped;
+    }
 
-      // Define shapes for literal nodes
-      literals.forEach(literal => {
-        graph.push(`  "${literal}" [shape=box];`);
+    function renderTableGraph(triples) {
+      const grouped = groupBySubject(triples);
+
+      let graph = ["digraph RDFGraph {", "  rankdir=LR;"];
+
+      graph.push(`graph [ fontname=Arial ];`);
+      graph.push(`node [ fontname=Arial];`);
+      graph.push(`edge [ fontname=Arial];`);
+
+      for (const subject in grouped) {
+        const { literals, links } = grouped[subject];
+
+        let table = `
+      <table border="0" cellborder="1" cellspacing="0" cellpadding="4" style="border-color: #ddd;">
+        <tr><td colspan="2" bgcolor="#f0f0f0"><b>${subject}</b></td></tr>`;
+        literals.forEach(({ predicate, object }) => {
+          table += `<tr><td align="left">${predicate}</td><td align="left">${object}</td></tr>`;
+        });
+        table += `</table>`;
+
+        graph.push(`  "${subject}" [label=<${table}> shape=plaintext];`);
+
+        links.forEach(({ predicate, object }) => {
+          graph.push(`  "${subject}" -> "${object}" [label="${predicate}"];`);
+        });
+      }
+
+      graph.push("}");
+      return graph.join("\n");
+    }
+
+    function renderNodeGraph(triples) {
+      const grouped = groupBySubject(triples);
+
+      let graph = ["digraph RDFGraph {", "  rankdir=LR;"];
+      graph.push(`graph [ fontname=Arial ];`);
+      graph.push(`node [ fontname=Arial, fontsize=11];`);
+      graph.push(`edge [ fontname=Arial, fontsize=10];`);
+      for (const subject in grouped) {
+        const { literals, links } = grouped[subject];
+
+        literals.forEach(({ predicate, object }) => {
+          graph.push(`  "${subject}" -> "${object}" [label="${predicate}"];`);
+          graph.push(`  "${object}" [shape=box];`);
+        });
+
+        links.forEach(({ predicate, object }) => {
+          graph.push(`  "${subject}" -> "${object}" [label="${predicate}"];`);
+        });
+      }
+
+      Object.keys(grouped).forEach(subject => {
+        graph.push(`  "${subject}" [shape=ellipse];`);
       });
 
       graph.push("}");
@@ -202,13 +176,16 @@ book123 date "1925-04-10"
 
     function renderGraph() {
       const input = document.getElementById("triplInput").value;
+      const viewType = document.getElementById("viewType").value;
+
       try {
         const triples = parseTripl(input);
-        const graphvizCode = toGraphviz(triples);
+        const graphvizCode =
+          viewType === "table"
+            ? renderTableGraph(triples)
+            : renderNodeGraph(triples);
 
-        // Use the Viz constructor directly
         const viz = new Viz();
-
         console.log(graphvizCode)
         viz.renderSVGElement(graphvizCode)
           .then(svg => {
@@ -216,13 +193,11 @@ book123 date "1925-04-10"
             graphDiv.innerHTML = "";
             graphDiv.appendChild(svg);
 
-            // Use SVG's bounding box to adjust viewBox
             const { x, y, width, height } = svg.getBBox();
             svg.setAttribute("viewBox", `${x} ${y} ${width} ${height}`);
             svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
             svg.style.width = "100%";
             svg.style.height = "100%";
-            graphDiv.appendChild(svg);
           })
           .catch(error => {
             console.error("Error rendering Graphviz:", error);
